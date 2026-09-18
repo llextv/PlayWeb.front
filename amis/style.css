@@ -1,0 +1,390 @@
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.friends-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 20px;
+}
+
+.friends-hero,
+.friends-card,
+.friends-list-card,
+.profile-card {
+  padding: 20px;
+  border: 1px solid var(--card-border-strong);
+  border-radius: 20px;
+  background: var(--card-grad);
+  box-shadow: var(--card-shadow);
+}
+
+.friends-hero {
+  background:
+    linear-gradient(135deg, rgba(249, 115, 22, 0.18), rgba(220, 38, 38, 0.04)),
+    var(--card-grad);
+}
+
+.friends-hero h1 {
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.friends-hero p,
+.friends-card p {
+  margin-top: 6px;
+  color: var(--text-muted);
+}
+
+.profile-card h2,
+.friends-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.profile-card h2 svg,
+.friends-card h2 svg {
+  width: 19px;
+  height: 19px;
+  color: var(--accent);
+}
+
+.profile-info {
+  margin-bottom: 16px;
+}
+
+.profile-pseudo {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.profile-pseudo span {
+  color: var(--text-main);
+  font-weight: 800;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-input-group,
+.invite-row {
+  display: flex;
+  gap: 10px;
+}
+
+.profile-input-group input,
+.invite-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--card-border-strong);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--text-main);
+}
+
+.profile-input-group button,
+.invite-row button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: 1px solid rgba(34, 197, 94, 0.55);
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.25),
+    rgba(22, 163, 74, 0.18)
+  );
+  color: #dcfce7;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.profile-input-group svg {
+  width: 16px;
+  height: 16px;
+}
+
+.profile-feedback {
+  min-height: 20px;
+  color: #86efac;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.friends-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.add-friend-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.request-list,
+.friends-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.request-row,
+.friend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--card-border-strong);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.friend-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.friend-details p {
+  margin: 3px 0 0;
+  font-size: 13px;
+}
+
+.friend-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.friend-actions button {
+  padding: 8px 12px;
+}
+
+.friends-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.friends-list-head h2 {
+  font-size: 19px;
+}
+
+.friends-list-head span {
+  color: #86efac;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.friends-empty {
+  margin: 0 !important;
+  padding: 12px 0;
+  text-align: center;
+}
+
+.invite-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.invite-modal.hidden {
+  display: none;
+}
+
+.invite-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(5px);
+}
+
+.invite-modal-card {
+  position: relative;
+  z-index: 1;
+  width: min(500px, 100%);
+  padding: 28px;
+  border: 1px solid rgba(249, 115, 22, 0.4);
+  border-radius: 22px;
+  background:
+    linear-gradient(135deg, rgba(249, 115, 22, 0.14), rgba(220, 38, 38, 0.03)),
+    #171717;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+}
+
+.invite-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+
+.invite-modal-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.invite-modal-card h2 {
+  margin: 4px 0 8px;
+  font-size: 24px;
+}
+
+.invite-modal-copy {
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+
+.invite-modal-form {
+  display: grid;
+  gap: 9px;
+}
+
+.invite-modal-form label {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.invite-select-wrap {
+  position: relative;
+}
+
+.invite-game-select {
+  appearance: none;
+  width: 100%;
+  padding: 13px 42px 13px 14px;
+  border: 1px solid var(--card-border-strong);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.invite-game-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.14);
+}
+
+.invite-game-select option {
+  background: #171717;
+  color: #fff;
+}
+
+.invite-select-wrap svg {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  width: 17px;
+  height: 17px;
+  color: var(--accent);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.invite-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.invite-modal-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.invite-modal-actions svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 900px) {
+  .friends-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-input-group,
+  .invite-row,
+  .friend-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .profile-input-group button,
+  .invite-row button,
+  .friend-actions {
+    width: 100%;
+  }
+
+  .friend-actions button {
+    flex: 1;
+  }
+
+  .invite-modal-card {
+    padding: 24px 20px;
+  }
+
+  .invite-modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .invite-modal-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .friends-hero,
+  .friends-card,
+  .friends-list-card,
+  .profile-card {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .friends-hero h1 {
+    font-size: 24px;
+  }
+
+  .friend-details {
+    align-items: flex-start;
+  }
+
+  .friend-row {
+    padding: 10px;
+  }
+
+  .friend-actions {
+    gap: 6px;
+  }
+
+  .friend-actions button {
+    padding-inline: 8px;
+    font-size: 12px;
+  }
+}

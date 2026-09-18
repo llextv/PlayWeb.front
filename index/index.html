@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlayWeb - Jeux</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-page="shop">
+    <div class="background-glow">
+      <div class="glow-1"></div>
+      <div class="glow-2"></div>
+    </div>
+    <div id="app"></div>
+    <div id="toast" class="toast-wrap" role="status" aria-live="polite"></div>
+    <div id="game-modes" hidden>
+      <span data-game-id="brainrotstar" data-game-mode="MULTI & SOLO"></span>
+      <span data-game-id="gambleking" data-game-mode="MULTI & SOLO"></span>
+      <span data-game-id="chess" data-game-mode="MULTI"></span>
+    </div>
+    <template id="page-template">
+      <section class="card games-hero">
+        <div class="eyebrow">Bibliothèque</div>
+        <h2>Notre sélection<br />de jeux.</h2>
+        <p>
+          Lancez des expériences immersives et découvrez de nouvelles aventures
+          en solo ou en multi !
+        </p>
+      </section>
+      <div class="section-title">
+        <h2>Jeux</h2>
+        <span class="muted small" data-games-count></span>
+      </div>
+      <div class="grid games-grid"></div>
+    </template>
+    <script src="../script.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

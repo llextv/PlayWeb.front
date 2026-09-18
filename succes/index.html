@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlayWeb - Succès</title>
+    <script src="../auth-guard.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-page="achievements">
+    <div class="background-glow">
+      <div class="glow-1"></div>
+      <div class="glow-2"></div>
+    </div>
+    <div id="app"></div>
+    <div id="toast" class="toast-wrap"></div>
+    <template id="page-template">
+      <main class="achievements-content">
+        <section class="achievement-hero">
+          <div>
+            <div class="eyebrow">Collection PlayWeb</div>
+            <h1>Chaque partie compte.</h1>
+            <p class="muted">Suis ta progression globale et découvre les défis propres à chaque jeu.</p>
+          </div>
+          <div class="achievement-hero-score">
+            <strong data-global-percent>0%</strong>
+            <span>complété</span>
+          </div>
+        </section>
+
+        <section class="card achievement-progress">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow">Progression globale</div>
+              <h2><span data-done-count></span> / <span data-achievement-count></span> succès débloqués</h2>
+            </div>
+            <span class="tag" data-global-status>En progression</span>
+          </div>
+          <div class="progress progress-large"><i data-global-progress></i></div>
+        </section>
+
+        <section class="game-achievements-section">
+          <div class="section-heading">
+            <div><div class="eyebrow">Par jeu</div><h2>Ta progression jeu par jeu</h2></div>
+            <span class="muted small">3 univers à compléter</span>
+          </div>
+          <div class="game-achievements-grid" data-game-achievements></div>
+        </section>
+
+        <section class="achievements-section">
+          <div class="section-heading">
+            <div><div class="eyebrow">Détails</div><h2>Tous les succès</h2></div>
+            <span class="muted small" data-achievement-filter-label></span>
+          </div>
+          <div class="grid achievements-grid"></div>
+        </section>
+      </main>
+    </template>
+    <script src="../script.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

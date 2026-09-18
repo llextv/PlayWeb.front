@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlayWeb - Profil</title>
+    <script src="../auth-guard.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-page="profile">
+    <div class="background-glow">
+      <div class="glow-1"></div>
+      <div class="glow-2"></div>
+    </div>
+    <div id="app"></div>
+    <div id="toast" class="toast-wrap" role="status" aria-live="polite"></div>
+
+    <template id="page-template">
+      <main class="profile-content">
+        <section class="profile-hero">
+          <div class="profile-hero-main">
+            <div class="profile-avatar-wrap">
+              <div class="avatar profile-avatar" data-profile-avatar></div>
+              <button class="avatar-edit-btn" type="button" aria-label="Modifier la photo de profil" title="Modifier la photo de profil">
+                <i data-lucide="pencil"></i>
+              </button>
+            </div>
+            <div>
+              <h1 data-profile-name></h1>
+              <div class="profile-meta">
+                <span class="tag"><i data-lucide="circle-user-round"></i><span data-profile-status></span></span>
+                <span class="muted small">Membre depuis <b data-profile-joined></b></span>
+              </div>
+            </div>
+          </div>
+          <div class="profile-hero-actions">
+            <button class="btn" type="button" data-edit-profile><i data-lucide="pencil"></i><span>Modifier</span></button>
+            <button class="btn primary" type="button" data-share-profile><i data-lucide="share-2"></i><span>Partager</span></button>
+          </div>
+        </section>
+
+        <section class="profile-stats">
+          <article class="stat-card"><span class="stat-icon orange"><i data-lucide="users"></i></span><div><b data-friends-count>0</b><span>Amis</span></div></article>
+          <article class="stat-card"><span class="stat-icon purple"><i data-lucide="trophy"></i></span><div><b data-achievements-count>0 / 0</b><span>Succès débloqués</span></div></article>
+          <article class="stat-card"><span class="stat-icon blue"><i data-lucide="clock-3"></i></span><div><b data-hours-count>0 h</b><span>Temps de jeu</span></div></article>
+          <article class="stat-card"><span class="stat-icon green"><i data-lucide="gamepad-2"></i></span><div><b data-games-count>0 / 0</b><span>Jeux découverts</span></div></article>
+        </section>
+
+        <div class="profile-layout">
+          <div class="profile-column">
+            <section class="profile-panel">
+              <div class="panel-heading"><div><div class="eyebrow">Activité</div><h2>Mon univers de jeux</h2></div><span class="muted small">Cette saison</span></div>
+              <div class="game-activity-list" data-game-activity></div>
+            </section>
+
+            <section class="profile-panel">
+              <div class="panel-heading"><div><div class="eyebrow">Progression</div><h2>Mes succès</h2></div><a class="panel-link" href="../succes/index.html">Voir tout <i data-lucide="arrow-up-right"></i></a></div>
+              <div class="achievement-summary">
+                <div class="achievement-ring"><strong data-achievement-percent>0%</strong><span>complété</span></div>
+                <div class="achievement-copy"><b data-achievement-title>Encore quelques défis</b><p class="muted small">Continue à jouer pour faire briller ta collection.</p><div class="progress"><i data-achievement-progress></i></div></div>
+              </div>
+            </section>
+          </div>
+
+          <div class="profile-column">
+            <section class="profile-panel settings-panel">
+              <div class="panel-heading"><div><div class="eyebrow">Compte</div><h2>Préférences</h2></div><i data-lucide="settings" class="panel-heading-icon"></i></div>
+              <form class="profile-form" data-profile-form>
+                <label for="profile-name-input">Pseudo</label>
+                <div class="inline-form"><input id="profile-name-input" class="input" type="text" maxlength="24" data-profile-input required /><button class="btn primary" type="submit">Enregistrer</button></div>
+                <p class="form-feedback" data-profile-feedback aria-live="polite"></p>
+              </form>
+              <div class="setting-row"><div class="setting-icon"><i data-lucide="eye"></i></div><div class="grow"><b>Visibilité du profil</b><p class="muted small">Contrôle qui peut consulter tes statistiques.</p></div><label class="privacy-select-wrap"><select class="privacy-select" data-privacy-select aria-label="Visibilité du profil"><option value="public">Public</option><option value="private">Privé</option></select><i data-lucide="chevron-down"></i></label></div>
+            </section>
+
+            <section class="profile-panel security-panel">
+              <div class="panel-heading"><div><div class="eyebrow">Accès</div><h2>Token de session</h2></div><i data-lucide="key-round" class="panel-heading-icon"></i></div>
+              <p class="muted small">Utilise ce token pour ouvrir ta session sur un autre appareil. Ne le partage jamais publiquement.</p>
+              <div class="token-box"><code data-session-token>••••••••••••••••</code><button class="icon-btn" type="button" data-reveal-token aria-label="Afficher le token"><i data-lucide="eye"></i></button><button class="icon-btn" type="button" data-copy-token aria-label="Copier le token"><i data-lucide="copy"></i></button></div>
+            </section>
+          </div>
+        </div>
+
+        <section class="profile-panel danger-panel">
+          <div><div class="eyebrow danger-eyebrow">Zone sensible</div><h2>Supprimer mon compte</h2><p class="muted small">Cette action efface ta session et toutes les données locales associées.</p></div>
+          <button class="btn danger" type="button" data-delete-account><i data-lucide="trash-2"></i><span>Supprimer</span></button>
+        </section>
+      </main>
+    </template>
+    <script src="../script.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

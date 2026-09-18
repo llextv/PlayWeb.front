@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>404 - Page introuvable | PlayWeb</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="background-glow" aria-hidden="true">
+      <div class="glow glow-one"></div>
+      <div class="glow glow-two"></div>
+    </div>
+
+    <main class="error-page">
+      <section class="error-card" aria-labelledby="error-title">
+        <a class="brand" href="../index.html" aria-label="Retour à PlayWeb">
+          <span class="brand-mark">PW</span>
+          <span>PlayWeb</span>
+        </a>
+
+        <div class="error-art" aria-hidden="true">
+          <span class="error-number">4</span>
+          <span class="error-orb"></span>
+          <span class="error-number">4</span>
+        </div>
+
+        <p class="eyebrow">Erreur de navigation</p>
+        <h1 id="error-title">Cette page a quitté la partie.</h1>
+        <p class="description">Le lien que tu as suivi n'existe pas ou n'est plus disponible.</p>
+
+        <div class="actions">
+          <a class="button primary" href="../index.html">Retour à l'accueil</a>
+          <button class="button secondary" type="button" data-go-back>Page précédente</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

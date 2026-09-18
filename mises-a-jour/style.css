@@ -1,0 +1,13 @@
+.updates-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.updates-card {
+  padding: 20px;
+  border: 1px solid var(--card-border-strong);
+  border-radius: 20px;
+  background: var(--card-grad);
+  box-shadow: var(--card-shadow);
+}

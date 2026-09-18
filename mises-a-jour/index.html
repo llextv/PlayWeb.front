@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlayWeb - Mises à jour</title>
+    <script src="../auth-guard.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-page="updates">
+    <div class="background-glow">
+      <div class="glow-1"></div>
+      <div class="glow-2"></div>
+    </div>
+    <div id="app"></div>
+    <div id="toast" class="toast-wrap"></div>
+    <template id="page-template"
+      ><div class="updates-page">
+        <section class="updates-card">
+          <div class="updates-card-header">
+            <i data-lucide="scroll-text"></i>
+            <div>
+              <div class="eyebrow">Journal de développement</div>
+              <h2>Mises à jour</h2>
+            </div>
+            <span class="version-badge">PlayWeb</span>
+          </div>
+          <p class="muted">
+            Les nouveautés, améliorations et corrections des jeux PlayWeb.
+          </p>
+        </section>
+        <section class="updates-card">
+          <div class="updates-card-header">
+            <i data-lucide="sparkles"></i>
+            <h2>BrainrotStar</h2>
+            <span class="version-badge">V1.0.0</span
+            ><span class="version-date">15/09/2026</span>
+          </div>
+          <div class="patchnote-content">
+            <div class="patchnote-section">
+              <div class="patchnote-section-header">
+                <i data-lucide="plus-circle"></i>
+                <h3>Nouveautés</h3>
+              </div>
+              <ul class="patchnote-list">
+                <li>
+                  <span class="new-badge">NOUVEAU</span> Ajout de BrainrotStar
+                  sur PlayWeb
+                </li>
+                <li>
+                  <span class="new-badge">NOUVEAU</span> Mode multi et solo
+                  disponible
+                </li>
+              </ul>
+            </div>
+            <div class="patchnote-section">
+              <div class="patchnote-section-header">
+                <i data-lucide="wrench"></i>
+                <h3>Corrections</h3>
+              </div>
+              <ul class="patchnote-list">
+                <li>
+                  <span class="fix-badge">FIX</span> Correction de l'affichage
+                  du mode MULTI
+                </li>
+                <li>
+                  <span class="fix-badge">FIX</span> Correction du centrage des
+                  cartes
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </div></template
+    >
+    <script src="../script.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

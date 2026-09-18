@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlayWeb - Classement</title>
+    <script src="../auth-guard.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-page="leaderboard">
+    <div class="background-glow">
+      <div class="glow-1"></div>
+      <div class="glow-2"></div>
+    </div>
+    <div id="app"></div>
+    <div id="toast" class="toast-wrap" role="status" aria-live="polite"></div>
+
+    <template id="page-template">
+      <main class="ranking-content">
+        <section class="publish-cta-card">
+          <div>
+            <h2>Mon profil</h2>
+            <p>Consulte ton classement et modifie ton pseudo ci-dessous.</p>
+          </div>
+          <button
+            class="btn-scroll-publish"
+            type="button"
+            data-scroll-profile
+            aria-label="Aller à mon profil"
+          >
+            <i data-lucide="arrow-down"></i>
+          </button>
+        </section>
+
+        <section class="ranking-card">
+          <div class="ranking-header">
+            <div>
+              <h1>Classement des joueurs</h1>
+              <p class="ranking-subtitle">Top joueurs de PlayWeb</p>
+            </div>
+            <div class="sort-controls">
+              <label for="game-filter">Classement du jeu</label>
+              <select id="game-filter" class="sort-select">
+                <option value="brainrotstar">BrainrotStar</option>
+                <option value="gambleking">GambleKing</option>
+                <option value="chess">Chess</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ranking-table-wrap">
+            <table class="ranking-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Pseudo</th>
+                  <th>Niveau</th>
+                  <th data-ranking-value-header>XP</th>
+                </tr>
+              </thead>
+              <tbody data-ranking-body></tbody>
+            </table>
+          </div>
+
+          <p class="ranking-disclaimer">
+            ⚠️ Ce classement affiche les meilleurs joueurs de PlayWeb.
+          </p>
+        </section>
+
+        <section class="publish-card" data-profile-section>
+          <h2>Votre profil</h2>
+          <div class="user-stats">
+            <p class="user-pseudo-display">
+              Votre pseudo est : <span data-user-pseudo></span>
+            </p>
+          </div>
+          <div class="personal-rankings" data-personal-rankings></div>
+          <button type="button" class="btn-publish" data-go-profile>
+            <i data-lucide="user-round-cog"></i>
+            <span>Modifier mon profil</span>
+          </button>
+        </section>
+      </main>
+    </template>
+
+    <script src="../script.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

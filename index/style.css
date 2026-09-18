@@ -1,0 +1,31 @@
+.games-hero {
+  margin-bottom: 24px;
+  background: var(--primary-grad);
+  border: none;
+}
+
+.games-hero h2 {
+  margin: 10px 0;
+  font-size: 36px;
+  font-weight: 900;
+}
+
+.games-hero p {
+  max-width: 500px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.games-grid {
+  align-items: stretch;
+}
+
+@media (max-width: 600px) {
+  .games-hero {
+    padding: 18px;
+  }
+
+  .games-hero h2 {
+    font-size: clamp(28px, 9vw, 36px);
+  }
+}

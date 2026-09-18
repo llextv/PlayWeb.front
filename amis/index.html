@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlayWeb - Amis</title>
+    <script src="../auth-guard.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-page="friends">
+    <div class="background-glow">
+      <div class="glow-1"></div>
+      <div class="glow-2"></div>
+    </div>
+    <div id="app"></div>
+    <div id="toast" class="toast-wrap" role="status" aria-live="polite"></div>
+
+    <template id="page-template">
+      <main class="friends-content">
+        <section class="friends-hero">
+          <h1>Mes amis</h1>
+          <p>Invite, suis et défie tes potes pour grimper plus vite.</p>
+        </section>
+
+        <section class="friends-grid">
+          <article class="friends-card add-friend-card">
+            <h2><i data-lucide="user-plus"></i> Ajouter un ami</h2>
+            <div class="invite-row">
+              <input
+                type="text"
+                placeholder="Pseudo de l'ami"
+                data-invite-input
+              />
+              <button type="button" data-invite-button>Envoyer</button>
+            </div>
+          </article>
+
+          <article class="friends-card">
+            <h2><i data-lucide="user-round-plus"></i> Vos demandes d'amis</h2>
+            <div class="request-list" data-request-list>
+              <p class="friends-empty">Aucune demande en attente</p>
+            </div>
+          </article>
+        </section>
+
+        <section class="friends-list-card">
+          <div class="friends-list-head">
+            <h2>Liste d'amis</h2>
+            <span data-friends-count></span>
+          </div>
+          <div class="friends-list" data-friends-list></div>
+        </section>
+      </main>
+
+      <div class="invite-modal hidden" data-invite-modal role="dialog" aria-modal="true" aria-labelledby="invite-modal-title">
+        <div class="invite-modal-overlay" data-close-invite></div>
+        <section class="invite-modal-card">
+          <button class="icon-btn invite-modal-close" type="button" data-close-invite aria-label="Fermer">
+            <i data-lucide="x"></i>
+          </button>
+          <div class="eyebrow">Invitation de partie</div>
+          <h2 id="invite-modal-title">Inviter un ami</h2>
+          <p class="muted invite-modal-copy">Choisis le jeu dans lequel tu veux retrouver <b data-invite-friend></b>.</p>
+          <form class="invite-modal-form" data-invite-form>
+            <label for="invite-game-select">Jeu à lancer</label>
+            <div class="invite-select-wrap">
+              <select id="invite-game-select" class="invite-game-select" data-invite-game required></select>
+              <i data-lucide="chevron-down"></i>
+            </div>
+            <div class="invite-modal-actions">
+              <button class="btn" type="button" data-close-invite>Annuler</button>
+              <button class="btn primary" type="submit"><i data-lucide="send"></i><span>Envoyer l'invitation</span></button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </template>
+
+    <script src="../script.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
