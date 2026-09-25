@@ -1,5 +1,5 @@
 (() => {
-  const API_BASE_URL = (window.PLAYWEB_API_URL || "https://deeppink-bear-404650.hostingersite.com/api/v1").replace(/\/$/, "");
+  const API_BASE_URL = (window.PLAYWEB_API_URL || "http://localhost:3000/api/v1").replace(/\/$/, "");
   const root = document.querySelector("#shared-profile");
   const token = new URLSearchParams(window.location.search).get("token");
   const escapeHtml = (value) => String(value ?? "")

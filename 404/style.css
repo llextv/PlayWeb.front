@@ -95,6 +95,15 @@ button {
   font-size: 20px;
 }
 
+img.brand-mark {
+    object-fit: contain;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    filter: drop-shadow(0 6px 12px rgba(239, 68, 68, 0.3));
+}
+
+
 .error-art {
   display: flex;
   align-items: center;

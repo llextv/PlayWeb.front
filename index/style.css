@@ -29,3 +29,41 @@
     font-size: clamp(28px, 9vw, 36px);
   }
 }
+
+.game-card.coming-soon {
+  position: relative;
+  filter: grayscale(1);
+  opacity: 0.55;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+.game-card.coming-soon > * {
+  pointer-events: none;
+}
+
+.game-card.coming-soon:hover {
+  border-color: var(--card-border-strong);
+}
+
+.game-card.coming-soon .cover {
+  position: relative;
+}
+
+.game-card.coming-soon .soon-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.game-card.coming-soon .game-play {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  box-shadow: none;
+}
