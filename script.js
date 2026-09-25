@@ -2,7 +2,7 @@
 
 const SESSION_KEY = "websteam.session.v2";
 const DATA_KEY = "websteam.data.v2";
-const API_BASE_URL = (window.PLAYWEB_API_URL || "http://localhost:3000/api/v1").replace(/\/$/, "");
+const API_BASE_URL = (window.PLAYWEB_API_URL || "https://deeppink-bear-404650.hostingersite.com/api/v1").replace(/\/$/, "");
 const BRAINROT_API_BASE_URL = "https://darkgoldenrod-frog-258465.hostingersite.com";
 
 const accounts = {
