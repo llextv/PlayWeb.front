@@ -233,7 +233,7 @@ img.brand-mark {
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--accent);
+    color: white;
     font-weight: 700;
     margin-bottom: 4px;
 }

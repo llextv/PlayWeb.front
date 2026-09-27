@@ -9,6 +9,43 @@ const getComingSoonLabel = (tag) => {
   return comingSoonLabels[key] || null;
 };
 
+const initDiscordModal = () => {
+  const discordOverlay = document.getElementById("discord-modal-overlay");
+  const discordClose = document.getElementById("discord-modal-close");
+
+  const closeDiscordModal = () => {
+    discordOverlay?.classList.add("hidden");
+    document.body.style.overflow = "";
+  };
+
+  document.addEventListener("click", (e) => {
+    const card = e.target.closest("#discord-card");
+    if (card) {
+      e.preventDefault();
+      discordOverlay?.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+  });
+
+  discordClose?.addEventListener("click", closeDiscordModal);
+
+  discordOverlay?.addEventListener("click", (e) => {
+    if (e.target === discordOverlay) {
+      closeDiscordModal();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !discordOverlay?.classList.contains("hidden")) {
+      closeDiscordModal();
+    }
+  });
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  initDiscordModal();
+});
+
 window.pageInit = ({ games, setText, session }) => {
   setText("#page-title", "Découvrir");
   setText("[data-games-count]", `${games.length} jeux`);
@@ -36,4 +73,7 @@ window.pageInit = ({ games, setText, session }) => {
       };
     }
   });
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
 };
