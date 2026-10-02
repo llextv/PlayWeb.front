@@ -2,6 +2,7 @@
 
 const SESSION_KEY = "websteam.session.v2";
 const DATA_KEY = "websteam.data.v2";
+const KNOWN_ACCOUNT_KEY = "websteam.known-account.v1";
 const API_BASE_URL = (window.PLAYWEB_API_URL || "https://deeppink-bear-404650.hostingersite.com/api/v1").replace(/\/$/, "");
 const BRAINROT_API_BASE_URL = "https://darkgoldenrod-frog-258465.hostingersite.com";
 
@@ -214,6 +215,7 @@ function loadSession() {
 
   if (session) {
     storage.set(SESSION_KEY, session.token);
+    storage.set(KNOWN_ACCOUNT_KEY, "1");
     data = clone(defaults);
   }
 }
@@ -448,51 +450,125 @@ function logout() {
   showLogin();
 }
 
-async function showLogin() {
+function showLogin() {
   document.querySelector("#app").innerHTML = `
     <main class="auth-gate-overlay">
-      <section class="auth-gate-card" role="dialog" aria-modal="true" aria-labelledby="auth-title">
-        <h1 id="auth-title" class="auth-gate-title">Connexion</h1>
-        <p class="auth-gate-subtitle">Entre votre identifiant de connexion pour vous connecter.</p>
-        <input id="auth-gate-input" class="auth-gate-input" type="text" placeholder="Votre identifiant de connexion" autocomplete="off">
-        <button id="auth-gate-login-btn" class="auth-gate-login-btn" type="button">Se connecter</button>
-        <p class="auth-gate-sep">Ou</p>
-        <div class="auth-gate-token-wrap">
-          <div class="auth-gate-token-head">Voici votre identifiant de connexion :</div>
-          <div class="auth-gate-token-row">
-            <div id="auth-gate-token-value" class="auth-gate-token-value">Création en cours...</div>
-            <button id="auth-gate-copy-btn" class="auth-gate-copy-btn" type="button">Copier</button>
+      <section class="auth-gate-card" role="dialog" aria-modal="true" aria-labelledby="auth-title" aria-describedby="auth-subtitle">
+        <div class="auth-gate-brand"><img src="../assets/playweb-fav-w.png" alt="" /><span>PlayWeb</span></div>
+        <div class="auth-gate-tabs" role="tablist" aria-label="Connexion ou inscription">
+          <button class="auth-gate-tab" type="button" role="tab" data-auth-tab="register" aria-controls="auth-panel-register">Créer un compte</button>
+          <button class="auth-gate-tab" type="button" role="tab" data-auth-tab="login" aria-controls="auth-panel-login">Se connecter</button>
+        </div>
+        <h1 id="auth-title" class="auth-gate-title"></h1>
+        <p id="auth-subtitle" class="auth-gate-subtitle"></p>
+
+        <form id="auth-panel-register" class="auth-gate-panel" data-auth-panel="register" role="tabpanel" novalidate>
+          <label class="auth-gate-label" for="auth-gate-name-input">Ton pseudo</label>
+          <input id="auth-gate-name-input" class="auth-gate-input" type="text" minlength="3" maxlength="24" placeholder="Ex. PlayerOne" autocomplete="nickname" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-describedby="auth-gate-name-hint">
+          <p id="auth-gate-name-hint" class="auth-gate-hint">Entre 3 et 24 caractères. Il sera visible par les autres joueurs.</p>
+          <button id="auth-gate-register-btn" class="auth-gate-continue-btn" type="submit">Créer mon compte</button>
+        </form>
+
+        <div class="auth-gate-panel" data-auth-panel="token" hidden>
+          <div class="auth-gate-token-wrap">
+            <div class="auth-gate-token-head">Ton identifiant de connexion</div>
+            <div id="auth-gate-token-value" class="auth-gate-token-value" tabindex="0"></div>
+            <div class="auth-gate-token-actions">
+              <button id="auth-gate-copy-btn" class="auth-gate-copy-btn" type="button">Copier</button>
+              <button id="auth-gate-download-btn" class="auth-gate-copy-btn" type="button">Télécharger (.txt)</button>
+            </div>
+            <p class="auth-gate-warn">Ne le partage avec personne : n'importe qui le possédant peut se connecter à ton compte.</p>
           </div>
-          <p class="auth-gate-warn">Merci de ne pas diffuser votre identifiant, n'importe quelle personne possédant votre identifiant peut se connecter à votre compte.</p>
+          <p class="auth-gate-hint">Pas de panique si tu l'oublies ici : tant que tu es connecté, tu le retrouves dans <b>Profil › Token de session</b>.</p>
+          <label class="auth-gate-check">
+            <input id="auth-gate-saved-check" type="checkbox">
+            <span>J'ai sauvegardé mon identifiant</span>
+          </label>
+          <button id="auth-gate-continue-btn" class="auth-gate-continue-btn" type="button" disabled>Accéder à PlayWeb</button>
         </div>
-        <div class="auth-gate-name-wrap">
-          <div class="auth-gate-name-head">Créez votre compte :</div>
-          <p class="auth-gate-name-help">Choisissez le pseudo qui sera affiché sur votre profil et auprès des autres joueurs.</p>
-          <label class="auth-gate-name-label" for="auth-gate-name-input">Votre pseudo</label>
-          <input id="auth-gate-name-input" class="auth-gate-input" type="text" maxlength="24" placeholder="Ex. PlayerOne" autocomplete="nickname">
-        </div>
-        <button id="auth-gate-continue-btn" class="auth-gate-continue-btn" type="button">Continuer</button>
+
+        <form id="auth-panel-login" class="auth-gate-panel" data-auth-panel="login" role="tabpanel" novalidate hidden>
+          <label class="auth-gate-label" for="auth-gate-input">Identifiant de connexion</label>
+          <div class="auth-gate-input-row">
+            <input id="auth-gate-input" class="auth-gate-input" type="text" placeholder="Colle ton identifiant ici" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-describedby="auth-gate-login-hint">
+            <button id="auth-gate-paste-btn" class="auth-gate-copy-btn" type="button" hidden>Coller</button>
+          </div>
+          <p id="auth-gate-login-hint" class="auth-gate-hint">C'est le long code qu'on t'a donné à la création de ton compte. Tu le retrouves dans <b>Profil › Token de session</b> sur un appareil où tu es encore connecté.</p>
+          <button id="auth-gate-login-btn" class="auth-gate-login-btn" type="submit">Se connecter</button>
+        </form>
+
         <p id="auth-gate-feedback" class="auth-gate-feedback" aria-live="polite"></p>
       </section>
     </main>`;
 
-  const input = document.querySelector("#auth-gate-input");
-  const loginButton = document.querySelector("#auth-gate-login-btn");
-  const copyButton = document.querySelector("#auth-gate-copy-btn");
-  const continueButton = document.querySelector("#auth-gate-continue-btn");
-  const tokenValue = document.querySelector("#auth-gate-token-value");
+  const title = document.querySelector("#auth-title");
+  const subtitle = document.querySelector("#auth-subtitle");
+  const tabs = document.querySelector(".auth-gate-tabs");
+  const tabButtons = [...document.querySelectorAll("[data-auth-tab]")];
+  const panels = [...document.querySelectorAll("[data-auth-panel]")];
+  const registerForm = document.querySelector("#auth-panel-register");
+  const registerButton = document.querySelector("#auth-gate-register-btn");
   const nameInput = document.querySelector("#auth-gate-name-input");
+  const tokenValue = document.querySelector("#auth-gate-token-value");
+  const copyButton = document.querySelector("#auth-gate-copy-btn");
+  const downloadButton = document.querySelector("#auth-gate-download-btn");
+  const savedCheck = document.querySelector("#auth-gate-saved-check");
+  const continueButton = document.querySelector("#auth-gate-continue-btn");
+  const loginForm = document.querySelector("#auth-panel-login");
+  const loginButton = document.querySelector("#auth-gate-login-btn");
+  const input = document.querySelector("#auth-gate-input");
+  const pasteButton = document.querySelector("#auth-gate-paste-btn");
   const feedback = document.querySelector("#auth-gate-feedback");
+  // Avoid opening the virtual keyboard on phones as soon as the page loads.
+  const canAutofocus = window.matchMedia?.("(hover: hover) and (pointer: fine)").matches;
   let temporaryToken = "";
+  let registeredUser = null;
+
+  const screens = {
+    register: {
+      title: "Bienvenue sur PlayWeb",
+      subtitle: "Pas d'e-mail ni de mot de passe : choisis juste ton pseudo, on s'occupe du reste.",
+      focus: nameInput,
+    },
+    token: {
+      title: "Garde bien ton identifiant",
+      subtitle: "Ton compte est créé ! Sur PlayWeb, cet identifiant remplace le mot de passe : c'est le seul moyen de te reconnecter sur un autre appareil ou après une déconnexion.",
+      focus: copyButton,
+    },
+    login: {
+      title: "Content de te revoir",
+      subtitle: "Colle l'identifiant de connexion que tu as sauvegardé à la création de ton compte.",
+      focus: input,
+    },
+  };
 
   const setFeedback = (message, success = false) => {
     feedback.textContent = message;
     feedback.style.color = success ? "#86efac" : "#fda4af";
   };
 
+  const showScreen = (name) => {
+    const screen = screens[name];
+    title.textContent = screen.title;
+    subtitle.textContent = screen.subtitle;
+    tabs.hidden = name === "token";
+    tabButtons.forEach((button) => {
+      const active = button.dataset.authTab === name;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-selected", String(active));
+      button.tabIndex = active ? 0 : -1;
+    });
+    panels.forEach((panel) => {
+      panel.hidden = panel.dataset.authPanel !== name;
+    });
+    setFeedback("");
+    if (canAutofocus) screen.focus.focus();
+  };
+
   const openSession = (token, user = null) => {
     session = { token, createdAt: Date.now() };
     storage.set(SESSION_KEY, token);
+    storage.set(KNOWN_ACCOUNT_KEY, "1");
     data = {
       ...clone(defaults),
       profile: {
@@ -504,54 +580,137 @@ async function showLogin() {
     renderApp();
   };
 
-  const registration = await api.register();
-  if (registration.ok && registration.token) {
-    temporaryToken = registration.token;
-    tokenValue.textContent = temporaryToken;
-  } else {
-    tokenValue.textContent = "Indisponible";
-    setFeedback(registration.error || "Le backend est indisponible pour le moment.");
-  }
-
-  copyButton.onclick = async () => {
-    if (!temporaryToken) return;
-    try {
-      await navigator.clipboard.writeText(temporaryToken);
-      setFeedback("Identifiant copié ✅", true);
-    } catch {
-      setFeedback("Impossible de copier automatiquement.");
-    }
+  const markSaved = () => {
+    savedCheck.checked = true;
+    continueButton.disabled = false;
   };
 
-  continueButton.onclick = () => {
-    if (!temporaryToken) {
-      setFeedback("Aucun identifiant temporaire disponible.");
-      return;
-    }
+  tabButtons.forEach((button) => {
+    button.onclick = () => showScreen(button.dataset.authTab);
+    button.onkeydown = (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      const next = tabButtons[(tabButtons.indexOf(button) + 1) % tabButtons.length];
+      next.focus();
+      showScreen(next.dataset.authTab);
+    };
+  });
+
+  nameInput.oninput = () => setFeedback("");
+  input.oninput = () => setFeedback("");
+
+  registerForm.onsubmit = async (event) => {
+    event.preventDefault();
     const name = nameInput.value.trim();
-    if (!name) {
-      setFeedback("Choisissez un pseudo pour continuer.");
+    if (name.length < 3 || name.length > 24) {
+      setFeedback("Ton pseudo doit faire entre 3 et 24 caractères.");
       nameInput.focus();
       return;
     }
-    continueButton.disabled = true;
-    apiRequestWithToken(temporaryToken, "/auth/me/name", {
-      method: "PATCH",
-      body: JSON.stringify({ name }),
-    }).then((result) => {
-      continueButton.disabled = false;
-      if (!result.ok) {
-        setFeedback(result.error || "Impossible d'enregistrer le pseudo.");
-        return;
+
+    registerButton.disabled = true;
+    registerButton.textContent = "Création du compte...";
+    setFeedback("");
+
+    // The account is only created once: if the pseudo is refused, we retry with the same token.
+    if (!temporaryToken) {
+      const registration = await api.register();
+      if (registration.ok && registration.token) {
+        temporaryToken = registration.token;
       }
-      openSession(temporaryToken, result.user);
-    });
+    }
+
+    const result = temporaryToken
+      ? await apiRequestWithToken(temporaryToken, "/auth/me/name", {
+        method: "PATCH",
+        body: JSON.stringify({ name }),
+      })
+      : { ok: false, error: "Backend indisponible." };
+
+    registerButton.disabled = false;
+    registerButton.textContent = "Créer mon compte";
+
+    if (!result.ok) {
+      if (result.error === "Backend indisponible." || !temporaryToken) {
+        setFeedback("Impossible de joindre le serveur. Vérifie ta connexion et réessaie.");
+      } else if (/between 3 and 24/.test(result.error || "")) {
+        setFeedback("Ton pseudo doit faire entre 3 et 24 caractères.");
+      } else {
+        setFeedback("Ce pseudo est déjà pris. Essaie-en un autre.");
+      }
+      nameInput.focus();
+      return;
+    }
+
+    registeredUser = result.user || { name };
+    // Keep the user signed in on this device even if they close the page before continuing.
+    storage.set(SESSION_KEY, temporaryToken);
+    storage.set(KNOWN_ACCOUNT_KEY, "1");
+    tokenValue.textContent = temporaryToken;
+    showScreen("token");
   };
 
-  const tryLogin = async () => {
-    const token = input.value.trim();
+  copyButton.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(temporaryToken);
+      markSaved();
+      setFeedback("Identifiant copié ✅ Colle-le dans tes notes ou ton gestionnaire de mots de passe.", true);
+    } catch {
+      const range = document.createRange();
+      range.selectNodeContents(tokenValue);
+      window.getSelection()?.removeAllRanges();
+      window.getSelection()?.addRange(range);
+      setFeedback("Copie automatique impossible : l'identifiant est sélectionné, copie-le manuellement.");
+    }
+  };
+
+  downloadButton.onclick = () => {
+    const content = [
+      "PlayWeb - Identifiant de connexion",
+      "",
+      `Pseudo : ${registeredUser?.name || ""}`,
+      `Identifiant : ${temporaryToken}`,
+      "",
+      "Ne partage cet identifiant avec personne : il permet de se connecter à ton compte.",
+      "",
+    ].join("\n");
+    const url = URL.createObjectURL(new Blob([content], { type: "text/plain;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "playweb-identifiant.txt";
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    markSaved();
+    setFeedback("Fichier téléchargé ✅", true);
+  };
+
+  savedCheck.onchange = () => {
+    continueButton.disabled = !savedCheck.checked;
+  };
+
+  continueButton.onclick = () => openSession(temporaryToken, registeredUser);
+
+  if (navigator.clipboard?.readText) {
+    pasteButton.hidden = false;
+    pasteButton.onclick = async () => {
+      try {
+        input.value = (await navigator.clipboard.readText()).trim();
+        setFeedback("");
+      } catch {
+        setFeedback("Impossible de lire le presse-papiers : colle l'identifiant manuellement.");
+        input.focus();
+      }
+    };
+  }
+
+  loginForm.onsubmit = async (event) => {
+    event.preventDefault();
+    // Tokens pasted from notes often carry spaces or line breaks.
+    const token = input.value.replace(/\s+/g, "");
     if (!token) {
-      setFeedback("Entre un identifiant valide.");
+      setFeedback("Colle ton identifiant de connexion pour continuer.");
+      input.focus();
       return;
     }
 
@@ -561,29 +720,26 @@ async function showLogin() {
     }
 
     if (!isBackendToken(token)) {
-      setFeedback("Identifiant invalide ou expiré.");
+      setFeedback("Cet identifiant n'est pas valide. Vérifie que tu l'as copié en entier.");
       return;
     }
 
     loginButton.disabled = true;
+    loginButton.textContent = "Connexion...";
     const result = await apiRequestWithToken(token, "/auth/me");
     loginButton.disabled = false;
+    loginButton.textContent = "Se connecter";
     if (!result.ok || !result.user) {
-      setFeedback("Identifiant invalide ou expiré.");
+      setFeedback(result.error === "Backend indisponible."
+        ? "Impossible de joindre le serveur. Vérifie ta connexion et réessaie."
+        : "Identifiant invalide ou expiré.");
       return;
     }
 
     openSession(token, result.user);
   };
 
-  loginButton.onclick = tryLogin;
-  input.onkeydown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      tryLogin();
-    }
-  };
-  input.focus();
+  showScreen(storage.get(KNOWN_ACCOUNT_KEY) ? "login" : "register");
 }
 
 function renderShell() {
