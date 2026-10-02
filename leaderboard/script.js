@@ -6,6 +6,7 @@ window.pageInit = ({ user, games, setText, toast, icons, api, initialPageData })
   const rankingSubtitle = document.querySelector(".ranking-subtitle");
   const personalRankings = document.querySelector("[data-personal-rankings]");
   const rankingValueHeader = document.querySelector("[data-ranking-value-header]");
+  const rankingLevelHeader = document.querySelector("[data-ranking-level-header]");
   let hasConsumedInitialRanking = false;
 
   gameFilter.innerHTML = games
@@ -20,15 +21,19 @@ window.pageInit = ({ user, games, setText, toast, icons, api, initialPageData })
   }
 
   const renderRows = (scores, label) => {
-    const sorted = [...(scores || [])].sort((a, b) => Number(b.score || 0) - Number(a.score || 0));
+    const isBrainrot = label === "BrainrotStar";
+    // BrainrotStar renvoie deja son ordre (rebirths d'abord, puis coins/sec).
+    const sorted = isBrainrot
+      ? [...(scores || [])]
+      : [...(scores || [])].sort((a, b) => Number(b.score || 0) - Number(a.score || 0));
     rankingSubtitle.textContent = `Top joueurs de ${label}`;
     rankingBody.innerHTML = sorted.length
       ? sorted.map((score, index) => `
         <tr>
           <td><span class="${rankClass(index + 1)}">${index + 1}</span></td>
           <td>${score.user?.name || "Joueur"}</td>
-          <td>—</td>
-          <td class="ranking-xp">${Number(score.score || 0).toLocaleString("fr-FR")}${label === "BrainrotStar" ? " /s" : ""}</td>
+          <td>${isBrainrot ? `🔄 ${score.rebirth || 0}` : "—"}</td>
+          <td class="ranking-xp">${Number(score.score || 0).toLocaleString("fr-FR")}${isBrainrot ? " /s" : ""}</td>
         </tr>`).join("")
       : '<tr><td colspan="4" class="muted">Aucun score enregistré.</td></tr>';
   };
@@ -53,6 +58,9 @@ window.pageInit = ({ user, games, setText, toast, icons, api, initialPageData })
     hasConsumedInitialRanking = true;
     if (rankingValueHeader) {
       rankingValueHeader.textContent = game?.id === "brainrotstar" ? "Coins / sec" : "XP";
+    }
+    if (rankingLevelHeader) {
+      rankingLevelHeader.textContent = game?.id === "brainrotstar" ? "Rebirths" : "Niveau";
     }
     if (result.ok && result.result) {
       renderRows(result.result.scores, game?.name || "ce jeu");
