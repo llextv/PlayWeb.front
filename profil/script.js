@@ -39,18 +39,12 @@ window.pageInit = ({ user, data, games, setText, toast, save, icons, api }) => {
   };
 
   const renderAvatar = (avatarUrl, fallback = user.avatar) => {
-    const avatar = document.querySelector("[data-profile-avatar]");
-    if (avatar) {
-      avatar.textContent = avatarUrl ? "" : fallback;
-      avatar.style.backgroundImage = avatarUrl ? `url("${avatarUrl}")` : "";
-      avatar.classList.toggle("has-image", Boolean(avatarUrl));
-    }
-    const miniAvatar = document.querySelector("[data-user-avatar]");
-    if (miniAvatar) {
-      miniAvatar.textContent = avatarUrl ? "" : fallback;
-      miniAvatar.style.backgroundImage = avatarUrl ? `url("${avatarUrl}")` : "";
-      miniAvatar.classList.toggle("has-image", Boolean(avatarUrl));
-    }
+    const image = cssImage(avatarUrl);
+    document.querySelectorAll("[data-profile-avatar], [data-user-avatar]").forEach((avatar) => {
+      avatar.textContent = image ? "" : fallback;
+      avatar.style.backgroundImage = image;
+      avatar.classList.toggle("has-image", Boolean(image));
+    });
   };
 
   renderAvatar(user.avatarUrl);
@@ -75,8 +69,8 @@ window.pageInit = ({ user, data, games, setText, toast, save, icons, api }) => {
     const row = document.createElement("article");
     row.className = `game-activity-row ${stats.played ? "" : "not-played"}`;
     row.innerHTML = `
-      <div class="game-mark ${game.id}">${game.name.slice(0, 1)}</div>
-      <div class="grow"><div class="game-row-title"><b>${game.name}</b><span class="${stats.played ? "tag" : "muted"}">${stats.played ? "Joué" : "Jamais joué"}</span></div>
+      <div class="game-mark ${escapeHtml(game.id)}">${escapeHtml(game.name.slice(0, 1))}</div>
+      <div class="grow"><div class="game-row-title"><b>${escapeHtml(game.name)}</b><span class="${stats.played ? "tag" : "muted"}">${stats.played ? "Joué" : "Jamais joué"}</span></div>
       <div class="activity-track"><i style="width: ${Math.min(100, stats.hours * 4)}%"></i></div></div>
       <strong class="game-hours">${Number(stats.hours).toFixed(1)} h</strong>`;
     activity.append(row);

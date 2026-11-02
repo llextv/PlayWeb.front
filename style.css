@@ -889,3 +889,45 @@ img.brand-mark {
     z-index: 100;
 }
 .skip-link:focus { left: 10px; }
+
+.banned-name-back {
+    z-index: 13000;
+}
+
+.banned-name-card {
+    width: min(420px, 100%);
+    display: grid;
+    gap: 12px;
+    text-align: center;
+}
+
+.banned-name-icon {
+    margin: 0 auto;
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+}
+
+.banned-name-card h2 {
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.banned-name-card .muted {
+    line-height: 1.45;
+}
+
+.banned-name-old {
+    color: #fff;
+}
+
+.banned-name-error {
+    min-height: 1em;
+    color: #fca5a5;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.banned-name-error:empty {
+    display: none;
+}
+

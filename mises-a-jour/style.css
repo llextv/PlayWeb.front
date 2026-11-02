@@ -11,3 +11,67 @@
   background: var(--card-grad);
   box-shadow: var(--card-shadow);
 }
+
+.updates-card.is-collapsible .updates-card-header {
+  cursor: pointer;
+  transition: margin-bottom 0.3s ease;
+}
+
+.updates-card.is-collapsed .updates-card-header {
+  margin-bottom: 0;
+}
+
+.patchnote-body {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.patchnote-body > .patchnote-content {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.updates-card.is-collapsed .patchnote-body {
+  grid-template-rows: 0fr;
+}
+
+.patchnote-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 12px;
+  border: 1px solid var(--card-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.patchnote-toggle:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.patchnote-toggle svg {
+  width: 14px;
+  height: 14px;
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+.updates-card.is-collapsed .patchnote-toggle svg {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .patchnote-body,
+  .patchnote-toggle svg,
+  .updates-card.is-collapsible .updates-card-header {
+    transition: none;
+  }
+}

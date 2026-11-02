@@ -9,7 +9,7 @@ setText("[data-friends-count]", `${data.friends.length} amis`);
   let selectedFriend = null;
 
   inviteGame.innerHTML = games
-    .map((game) => `<option value="${game.id}">${game.name}</option>`)
+    .map((game) => `<option value="${escapeHtml(game.id)}">${escapeHtml(game.name)}</option>`)
     .join("");
 
   const closeInviteModal = () => {
@@ -59,10 +59,10 @@ setText("[data-friends-count]", `${data.friends.length} amis`);
     row.className = "friend-row";
     row.innerHTML = `
       <div class="friend-details">
-        <div class="avatar">${friend.avatar}</div>
+        <div class="avatar">${escapeHtml(friend.avatar)}</div>
         <div>
-          <b>${friend.name}</b>
-          <p class="${friend.status === "En ligne" ? "tag" : "muted"}">● ${friend.status}</p>
+          <b>${escapeHtml(friend.name)}</b>
+          <p class="${friend.status === "En ligne" ? "tag" : "muted"}">● ${escapeHtml(friend.status)}</p>
         </div>
       </div>
       <div class="friend-actions">
@@ -107,7 +107,7 @@ setText("[data-friends-count]", `${data.friends.length} amis`);
       const name = request.requester?.name || "Joueur";
       const row = document.createElement("div");
       row.className = "request-row";
-      row.innerHTML = `<div><b>${name}</b><p class="muted small">Demande d'ami</p></div>
+      row.innerHTML = `<div><b>${escapeHtml(name)}</b><p class="muted small">Demande d'ami</p></div>
         <div class="friend-actions"><button class="btn primary" type="button">Accepter</button><button class="btn danger" type="button">Refuser</button></div>`;
       const [acceptButton, declineButton] = row.querySelectorAll("button");
       acceptButton.onclick = () => (api ? api.acceptFriend(request.id) : Promise.resolve({ ok: true })).then((result) => {

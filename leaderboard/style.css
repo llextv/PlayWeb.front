@@ -112,15 +112,69 @@ body {
 
 .ranking-table {
   width: 100%;
-  min-width: 620px;
+  min-width: 900px;
   border-collapse: collapse;
 }
 
 .ranking-table th,
 .ranking-table td {
-  padding: 13px 14px;
+  padding: 13px 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   text-align: left;
+}
+
+.ranking-table td {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.ranking-table td.name-cell {
+  min-width: 120px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.cps-cell,
+.money-cell,
+.rebirth-cell,
+.win-cell,
+.village-cell,
+.achievements-cell,
+.streak-cell {
+  font-weight: 700;
+}
+
+.cps-cell {
+  color: #facc15;
+}
+
+.money-cell {
+  color: #4ade80;
+}
+
+.rebirth-cell {
+  color: #a78bfa;
+}
+
+.win-cell {
+  color: #fb923c;
+}
+
+.village-cell {
+  color: #2dd4bf;
+}
+
+.achievements-cell {
+  color: #f472b6;
+}
+
+.streak-cell {
+  color: #f97316;
+}
+
+.streak-cell.is-dead {
+  color: var(--text-muted);
+  opacity: 0.6;
 }
 
 .ranking-table th {
@@ -314,7 +368,7 @@ body {
   }
 
   .ranking-table {
-    min-width: 500px;
+    min-width: 820px;
   }
 
   .ranking-table th,

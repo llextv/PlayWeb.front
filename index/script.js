@@ -59,17 +59,17 @@ window.pageInit = ({ games, setText, session }) => {
     card.className = `card game-card${comingSoon ? " coming-soon" : ""}`;
     if (comingSoon) card.setAttribute("aria-disabled", "true");
     card.innerHTML = `
-      <div class="cover">${game.name}${comingSoon ? `<span class="soon-badge">${comingSoon}</span>` : ""}</div>
+      <div class="cover">${escapeHtml(game.name)}${comingSoon ? `<span class="soon-badge">${comingSoon}</span>` : ""}</div>
       <div class="card-body">
-        <div class="row"><div><b>${game.name}</b><div class="muted small">${game.genre}</div></div><span class="tag">${mode}</span></div>
-        <p class="muted small">${game.description}</p>
+        <div class="row"><div><b>${escapeHtml(game.name)}</b><div class="muted small">${escapeHtml(game.genre)}</div></div><span class="tag">${escapeHtml(mode)}</span></div>
+        <p class="muted small">${escapeHtml(game.description)}</p>
         <button class="btn primary game-play" type="button"${comingSoon ? " disabled" : ""}>${comingSoon || "Jouer"}</button>
       </div>`;
     grid.append(card);
-    const launchUrl = game.launchUrl;
+    const launchUrl = safeHttpUrl(game.launchUrl) && game.launchUrl;
     if (launchUrl && !comingSoon) {
       card.querySelector(".game-play").onclick = () => {
-        window.location.href = launchUrl.replace("[token de la personne]", session.token);
+        window.location.href = launchUrl.replace("[token de la personne]", encodeURIComponent(session.token));
       };
     }
   });

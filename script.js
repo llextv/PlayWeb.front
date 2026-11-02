@@ -3,8 +3,28 @@
 const SESSION_KEY = "websteam.session.v2";
 const DATA_KEY = "websteam.data.v2";
 const KNOWN_ACCOUNT_KEY = "websteam.known-account.v1";
-const API_BASE_URL = (window.PLAYWEB_API_URL || "https://deeppink-bear-404650.hostingersite.com/api/v1").replace(/\/$/, "");
-const BRAINROT_API_BASE_URL = "https://proxy-bsstar.llexllex-proxy.workers.dev";
+const IS_LOCAL = /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
+const API_BASE_URL = (window.PLAYWEB_API_URL || (IS_LOCAL
+  ? `${window.location.origin}/api/v1`
+  : "https://deeppink-bear-404650.hostingersite.com/api/v1")).replace(/\/$/, "");
+const BRAINROT_API_BASE_URL = IS_LOCAL ? "http://localhost:3000" : "https://proxy-bsstar.llexllex-proxy.workers.dev";
+
+const HTML_ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => HTML_ESCAPES[char]);
+
+function safeHttpUrl(value) {
+  try {
+    const url = new URL(String(value || ""));
+    return url.protocol === "https:" || url.protocol === "http:" ? url.href : "";
+  } catch {
+    return "";
+  }
+}
+
+function cssImage(value) {
+  const url = safeHttpUrl(value);
+  return url ? `url(${JSON.stringify(url)})` : "";
+}
 
 const accounts = {
   "demo-token-alice": {
@@ -147,11 +167,11 @@ const api = {
   declineFriend: (friendId) => apiRequest(`/friends/decline/${encodeURIComponent(friendId)}`, { method: "POST" }),
   deleteFriend: (friendId) => apiRequest(`/friends/${encodeURIComponent(friendId)}`, { method: "DELETE" }),
   getRanking: (gameId) => apiRequest(`/ranking/${encodeURIComponent(gameId)}`),
-  getBrainrotLeaderboard: async () => {
+  getBrainrotLeaderboard: async (type = "rank") => {
     try {
       // Route publique : pas de jeton, donc pas de preflight CORS, et le
       // classement s'affiche meme pour un joueur sans compte BrainrotStar.
-      const response = await fetch(`${BRAINROT_API_BASE_URL}/leaderboard/public`, {
+      const response = await fetch(`${BRAINROT_API_BASE_URL}/leaderboard/public?type=${encodeURIComponent(type)}`, {
         headers: { Accept: "application/json" },
       });
       const body = await response.json().catch(() => ({}));
@@ -162,9 +182,14 @@ const api = {
         ok: true,
         result: {
           scores: (Array.isArray(body.result) ? body.result : []).map((entry) => ({
-            score: Number(entry.goldPerSec || 0),
+            name: String(entry.pseudo || "Joueur"),
+            cps: Number(entry.goldPerSec || 0),
+            money: Number(entry.gold || 0),
             rebirth: Number(entry.hasRebirth || 0),
-            user: { name: entry.pseudo || "Joueur" },
+            win: Number(entry.win || 0),
+            villageWins: Number(entry.villageWins || 0),
+            achievements: Number(entry.achievements || 0),
+            streak: Number(entry.streak || 0),
           })),
         },
       };
@@ -402,12 +427,9 @@ async function hydrateRemoteData(page) {
   }
 
   if (page === "leaderboard") {
-    const game = games.find((item) => item.id === "brainrotstar") || games[0];
-    const ranking = game?.id === "brainrotstar"
-      ? await api.getBrainrotLeaderboard()
-      : game ? await api.getRanking(game.id) : null;
+    const [ranking, me] = await Promise.all([api.getBrainrotLeaderboard(), api.getMe()]);
     initialPageData.ranking = ranking;
-    mergeRemoteData({ user: ranking?.user });
+    mergeRemoteData({ user: me.user });
     return;
   }
 
@@ -429,10 +451,10 @@ function icons() {
 function renderMiniAvatar(user = currentUser()) {
   const avatar = document.querySelector("[data-user-avatar]");
   if (!avatar) return;
-  const avatarUrl = user.avatarUrl || "";
-  avatar.textContent = avatarUrl ? "" : user.avatar || "J";
-  avatar.style.backgroundImage = avatarUrl ? `url("${avatarUrl}")` : "";
-  avatar.classList.toggle("has-image", Boolean(avatarUrl));
+  const image = cssImage(user.avatarUrl);
+  avatar.textContent = image ? "" : user.avatar || "J";
+  avatar.style.backgroundImage = image;
+  avatar.classList.toggle("has-image", Boolean(image));
 }
 
 function toast(message) {
@@ -634,6 +656,8 @@ function showLogin() {
         setFeedback("Impossible de joindre le serveur. Vérifie ta connexion et réessaie.");
       } else if (/between 3 and 24/.test(result.error || "")) {
         setFeedback("Ton pseudo doit faire entre 3 et 24 caractères.");
+      } else if (/^Ce pseudo/.test(result.error || "")) {
+        setFeedback(result.error);
       } else {
         setFeedback("Ce pseudo est déjà pris. Essaie-en un autre.");
       }
@@ -757,8 +781,8 @@ function renderShell() {
         </nav>
         <div class="side-foot">
           <div class="user-mini">
-            <div class="avatar" data-user-avatar>${currentUser().avatar}</div>
-            <div class="grow"><b>${currentUser().name}</b></div>
+            <div class="avatar" data-user-avatar>${escapeHtml(currentUser().avatar)}</div>
+            <div class="grow"><b>${escapeHtml(currentUser().name)}</b></div>
             <button class="btn danger" id="logout" title="Déconnexion"><i data-lucide="log-out"></i></button>
           </div>
         </div>
@@ -766,7 +790,7 @@ function renderShell() {
       <main class="main" id="content">
         <header class="topbar">
           <h1 id="page-title"></h1>
-          <button class="btn" id="quick-profile">${currentUser().name}</button>
+          <button class="btn" id="quick-profile">${escapeHtml(currentUser().name)}</button>
         </header>
         <div id="page-content"></div>
       </main>
@@ -808,6 +832,64 @@ async function renderApp() {
     api: api.enabled() ? api : null,
     session,
     initialPageData,
+  });
+  checkBannedName();
+}
+
+async function checkBannedName() {
+  if (!api.enabled()) return;
+  const me = await api.getMe();
+  if (!me?.ok || !me.user?.nameBanned) return;
+  showBannedNameModal(me.user.name || "");
+}
+
+function showBannedNameModal(oldName) {
+  if (document.querySelector(".banned-name-back")) return;
+  const back = document.createElement("div");
+  back.className = "modal-back banned-name-back";
+  back.setAttribute("role", "dialog");
+  back.setAttribute("aria-modal", "true");
+  back.setAttribute("aria-labelledby", "banned-name-title");
+  back.innerHTML = `
+    <form class="card banned-name-card">
+      <div class="badge banned-name-icon"><i data-lucide="shield-alert"></i></div>
+      <h2 id="banned-name-title">Pseudo banni</h2>
+      <p class="muted">Ton ancien pseudo <b class="banned-name-old"></b> a été banni. Choisis un nouveau pseudo pour continuer.</p>
+      <input class="input" name="name" minlength="3" maxlength="24" autocomplete="off" placeholder="Nouveau pseudo" required />
+      <p class="banned-name-error" aria-live="polite"></p>
+      <button class="btn primary" type="submit">Valider mon pseudo</button>
+    </form>`;
+  back.querySelector(".banned-name-old").textContent = `« ${oldName} »`;
+  document.body.append(back);
+  icons();
+
+  const form = back.querySelector("form");
+  const input = form.elements.name;
+  const error = back.querySelector(".banned-name-error");
+  const submit = form.querySelector("button");
+  input.focus();
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const name = input.value.trim();
+    if (name.length < 3 || name.length > 24) {
+      error.textContent = "Ton pseudo doit faire entre 3 et 24 caractères.";
+      return;
+    }
+    submit.disabled = true;
+    error.textContent = "";
+    const result = await api.updateName(name);
+    if (!result?.ok) {
+      error.textContent = result?.error || "Impossible de changer ton pseudo pour le moment.";
+      submit.disabled = false;
+      return;
+    }
+    if (data?.profile) {
+      data.profile.name = name;
+      saveData();
+    }
+    toast("Pseudo changé !");
+    window.location.reload();
   });
 }
 

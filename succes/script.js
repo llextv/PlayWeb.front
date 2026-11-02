@@ -29,8 +29,8 @@ window.pageInit = ({ data, games, setText }) => {
     card.className = `game-achievement-card game-${game.id}`;
     card.innerHTML = `
       <div class="game-achievement-head">
-        <div class="game-achievement-icon">${game.name.slice(0, 1)}</div>
-        <div><h3>${game.name}</h3><span class="muted small">${gameAchievements.length} succès disponibles</span></div>
+        <div class="game-achievement-icon">${escapeHtml(game.name.slice(0, 1))}</div>
+        <div><h3>${escapeHtml(game.name)}</h3><span class="muted small">${gameAchievements.length} succès disponibles</span></div>
         <strong>${gameDone}/${gameAchievements.length}</strong>
       </div>
       <div class="progress"><i style="width: ${gamePercent}%"></i></div>
@@ -45,7 +45,7 @@ window.pageInit = ({ data, games, setText }) => {
     const unlockedDate = achievement.done && achievement.unlockedAt
       ? new Date(achievement.unlockedAt).toLocaleDateString("fr-FR")
       : null;
-    card.innerHTML = `<div class="row"><div class="badge"><i data-lucide="${achievement.icon}"></i></div><span class="tag">${achievement.rare}</span></div><h3>${achievement.name}</h3><div class="muted small">${achievement.game}</div>${unlockedDate ? `<div class="muted small achievement-unlocked-date">Débloqué le ${unlockedDate}</div>` : ""}<div class="${achievement.done ? "tag" : "achievement-discover"} achievement-status">${achievement.done ? "✓ Débloqué" : "◌ À découvrir"}</div>`;
+    card.innerHTML = `<div class="row"><div class="badge"><i data-lucide="${escapeHtml(achievement.icon)}"></i></div><span class="tag">${escapeHtml(achievement.rare)}</span></div><h3>${escapeHtml(achievement.name)}</h3><div class="muted small">${escapeHtml(achievement.game)}</div>${unlockedDate ? `<div class="muted small achievement-unlocked-date">Débloqué le ${unlockedDate}</div>` : ""}<div class="${achievement.done ? "tag" : "achievement-discover"} achievement-status">${achievement.done ? "✓ Débloqué" : "◌ À découvrir"}</div>`;
     grid.append(card);
   });
   window.lucide?.createIcons();
